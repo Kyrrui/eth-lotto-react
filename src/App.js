@@ -23,6 +23,14 @@ class App extends Component {
     this.setState({message: 'You have been entered!'});
   }
 
+  onClick = async (event) => {
+    event.preventDefault();
+    const accounts = await web3.eth.getAccounts();
+    this.setState({message: 'Waiting on transaction success...'});
+    await lottery.methods.pickWinner().send({from: accounts[0]});
+    this.setState({message: 'A winner has been picked!'});
+  }
+
   render() {
     web3.eth.getAccounts()
     .then(console.log());
@@ -46,6 +54,10 @@ class App extends Component {
         </form>
         <hr />
         <h1>{this.state.message}</h1>
+        <hr />
+
+        <h4> Ready to pick a winner? (Contract Manager Only) </h4>
+        <button onClick={this.onClick}> Pick a winner! </button>
       </div>
     );
   }
